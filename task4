@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		简单的js小demo
+	</title>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content=" width=device-width, initial-scale=1,maximum-scale=1">
+</head>
+<style type="text/css">
+	input[type="button"]{
+		border-radius: 5px;
+		background: #fff;
+	}
+
+	.in,  .out{
+			display: inline-block;
+			margin-right: 1vw;
+	}
+	p span{
+		background: #F4143D;
+		margin: 0px 20px;
+		padding: 10px;
+	}
+
+</style>
+
+<script type="text/javascript">
+// window.onload来运行程序；
+	window.onload=function(){
+		btnHandle();
+		removeAnyElement();
+
+	}
+	//定义getInputValue函数 获取input输入框输入的数字；
+	function getInputValue(){
+		var inputValue=document.getElementById('number').value.trim();
+		if (inputValue=="") {
+			alert("请输入一个数字！");
+			return false;
+	}
+			else if(!isNaN(inputValue))
+		           		  return inputValue;
+					 else {
+					 	alert("格式有问题，请输入一个数字！");
+		 				return false;
+		 			}
+	}
+
+	// 定义addSpan和removeSpan来添加或者删除span 标签元素；
+	function addSpanByLeft(){
+		var inputValue=getInputValue();
+		var queue=document.getElementById('queue');
+		if (inputValue!==false) {
+				var span=document.createElement("span");
+				span.innerHTML=inputValue;
+				queue.insertBefore(span,queue.firstChild);
+		}
+		removeAnyElement();
+	}
+
+	function addSpanByRight(){
+		var inputValue=getInputValue();
+		var queue=document.getElementById('queue');
+		if (inputValue!==false) {
+				var span=document.createElement("span");
+				span.innerHTML=inputValue;
+				queue.appendChild(span);
+		}
+		removeAnyElement();
+	}
+
+// 删除第一个元素
+	function removeSpanByLeft(){
+		var queue=document.getElementById('queue');
+		if(queue.firstChild){
+				alert("You delete this element:"+queue.firstElementChild.innerHTML)
+				queue.removeChild(queue.firstChild);
+		}
+		removeAnyElement();
+	}
+// 删除最后一个元素
+	function removeSpanByRight(){
+		var queue=document.getElementById('queue');
+		if(queue.lastElementChild){
+				alert("You delete this element:"+queue.lastElementChild.innerHTML)
+				queue.removeChild(queue.lastElementChild);
+		}
+		removeAnyElement();
+	}
+
+	// 定义btnHandle来绑定点击事件；
+	function btnHandle(){
+		document.getElementById('leftIn').onclick=function(){
+			addSpanByLeft();
+			};
+		document.getElementById("rightIn").onclick=addSpanByRight ;
+		document.getElementById("leftOut").onclick=removeSpanByLeft ;
+		document.getElementById("rightOut").onclick=removeSpanByRight ;
+	}
+
+	//定义removeAnyElement删除任意span标签
+	function removeAnyElement(){
+		var span=document.getElementById("queue").getElementsByTagName('span');
+		for (var i = 0; i < span.length; i++) {
+			span[i].onclick=function(){
+				this.parentNode.removeChild(this);
+			}
+		}
+
+	}
+
+</script>
+
+<body>
+	<!-- 首先布局 -->
+	<input type="text" name="number" id="number"  placeholder="请输入一个数字！" />
+			<div class="in">
+				<input type="button" name="btn" value="左侧入" id="leftIn" />
+				<input type="button" name="btn" value="右侧入" id="rightIn"/>
+			</div>
+			<div class="out">
+				<input type="button" name="btn" value="左侧出" id="leftOut"/>
+				<input type="button" name="btn" value="右侧出" id="rightOut"/>
+			</div>
+			<p id="queue">
+				
+			</p>
+
+</body>
+</html>
