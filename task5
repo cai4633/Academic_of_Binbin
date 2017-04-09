@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		简单的js小demo
+	</title>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content=" width=device-width, initial-scale=1,maximum-scale=1">
+</head>
+<style type="text/css">
+	input[type="button"]{
+		border-radius: 5px;
+		background: #fff;
+	}
+
+	.in,  .out, .resort{
+			display: inline-block;
+			margin-right: 1vw;
+	}
+	p{
+		height: 250px;
+		line-height: 250px;
+		border:1px solid #000;
+	}
+	p span{
+		display: inline-block;
+		width: 20px;
+		background: #F4143D;
+		margin: 0px 2px;
+		vertical-align: bottom;
+	}
+
+</style>
+
+<script type="text/javascript">
+	// window.onload来运行程序；
+	window.onload=function(){
+		btnHandle();
+		removeAnyElement();
+
+	}
+
+	//定义getInputValue函数 获取input输入框输入的数字；
+	// 添加限制条件：
+	// 限制输入的数字在10-100；
+	// 队列元素数量最多限制为60个，当超过60个时，添加元素时alert出提示
+	// 队列展现方式变化如图，直接用高度表示数字大小
+	function getInputValue(){
+		var inputValue=document.getElementById('number').value.trim();
+		if (inputValue=="") {
+			alert("请输入一个10-100的数字！");
+			return false;
+	}
+			else if(!isNaN(inputValue)&&inputValue>=10&&inputValue<=100)
+		           		  return inputValue;
+					 else {
+					 	alert("输入格式有问题，请输入一个10-100的数字！");
+		 				return false;
+		 			}
+	}
+
+	// 定义addSpan和removeSpan来添加或者删除span 标签元素；
+	function addSpanByLeft(){
+		var inputValue=getInputValue();
+		var queue=document.getElementById('queue');
+		if (inputValue!==false) {
+				var span=document.createElement("span");
+				span.style.height=inputValue*2+"px";
+				queue.insertBefore(span,queue.firstElementChild);
+		}
+		if (queue.children.length>60) {
+			alert("你添加的元素已经超过60个，请删除后再添加")
+		}
+		removeAnyElement();
+	}
+
+	function addSpanByRight(){
+		var inputValue=getInputValue();
+		var queue=document.getElementById('queue');
+		if (inputValue!==false) {
+				var span=document.createElement("span");
+				span.style.height=inputValue*2+"px";
+				queue.appendChild(span);
+		}
+
+		if (queue.children.length>60) {
+			alert("你添加的元素已经超过60个，请删除后再添加")
+		}
+		removeAnyElement();
+	}
+
+// 删除第一个元素
+	function removeSpanByLeft(){
+		var queue=document.getElementById('queue');
+		if(queue.firstElementChild){
+				alert("You delete this element:"+parseInt(queue.firstElementChild.style.height)/2);
+				queue.removeChild(queue.firstElementChild);
+		}
+		removeAnyElement();
+	}
+// 删除最后一个元素
+	function removeSpanByRight(){
+		var queue=document.getElementById('queue');
+		if(queue.lastElementChild){
+				alert("You delete this element:"+parseInt(queue.lastElementChild.style.height)/2);
+				queue.removeChild(queue.lastElementChild);
+		}
+		removeAnyElement();
+	}
+
+// 排序
+	function resort(){
+		var spanHeight=[];
+		var span=document.getElementsByTagName('span');
+		for (var i = 0; i < span.length; i++) {
+			spanHeight.push(span[i].style.height.split("px")[0]);
+		}
+		
+		spanHeight.sort(function(a,b){return(a-b)});
+		for (var i = 0; i < span.length; i++) {
+			span[i].style.height=spanHeight[i]+'px';
+		}
+		
+	}
+	// 定义btnHandle来绑定点击事件；
+	function btnHandle(){
+		document.getElementById('leftIn').onclick=function(){
+			addSpanByLeft();
+			};
+		document.getElementById("rightIn").onclick=addSpanByRight ;
+		document.getElementById("leftOut").onclick=removeSpanByLeft ;
+		document.getElementById("rightOut").onclick=removeSpanByRight ;
+		document.getElementById("resort").onclick=resort;
+
+	}
+
+	//定义removeAnyElement删除任意span标签
+	function removeAnyElement(){
+		var span=document.getElementById("queue").getElementsByTagName('span');
+		for (var i = 0; i < span.length; i++) {
+			span[i].onclick=function(){
+				this.parentNode.removeChild(this);
+			}
+		}
+
+	}
+
+</script>
+
+<body>
+	<!-- 首先布局 -->
+	<input type="text" name="number" id="number"  placeholder="请输入一个数字！" />
+			<div class="in">
+				<input type="button" name="btn" value="左侧入" id="leftIn" />
+				<input type="button" name="btn" value="右侧入" id="rightIn"/>
+			</div>
+			<div class="out">
+				<input type="button" name="btn" value="左侧出" id="leftOut"/>
+				<input type="button" name="btn" value="右侧出" id="rightOut"/>
+			</div>
+
+			<div class="resort">
+				<input type="button" name="btn" value="排序" id="resort" />
+			</div>
+			<p id="queue"></p>
+
+</body>
+</html>
