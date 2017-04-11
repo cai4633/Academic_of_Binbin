@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		简单的js小demo
+	</title>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content=" width=device-width, initial-scale=1,maximum-scale=1">
+</head>
+<style type="text/css">
+	input[type="button"]{
+		border-radius: 5px;
+		background: #fff;
+	}
+
+	.in,  .out{
+			display: inline-block;
+			margin-right: 1vw;
+	}
+
+	.research{
+		margin: 10px 0px;
+	}
+	p{
+		height: 250px;
+		line-height: 250px;
+		border:1px solid #000;
+	}
+	p span{
+		display: inline;
+		margin: 0px 10px;
+		vertical-align: bottom;
+		/*border:1px solid #000;*/
+	}
+	textarea{
+		border-radius:10px;
+		width: 15%;
+		height: 100px;
+		vertical-align: bottom;
+	}
+
+</style>
+
+<script type="text/javascript">
+	// window.onload来运行程序；
+	window.onload=function(){
+		btnHandle();
+		removeAnyElement();
+
+	}
+
+		// 基于任务四进行升级
+		// 将新元素输入框从input改为textarea
+		// 允许一次批量输入多个内容，格式可以为数字、中文、英文等，可以通过用回车，逗号（全角半角均可），顿号，空格（全角半角、Tab等均可）等符号作为不同内容的间隔
+		// 增加一个查询文本输入框，和一个查询按钮，当点击查询时，将查询词在各个元素内容中做模糊匹配，将匹配到的内容进行特殊标识，如文字颜色等。举例，内容中有abcd，查询词为ab或bc，则该内容需要标识
+	function getInputValue(){
+		var inputValue=document.getElementById('input').value.trim();
+		if (inputValue=="") {
+			alert("请输入一段文字！");
+			return false;
+		}
+		else 
+			return inputValue;
+	}
+
+	// 定义addSpan来添加span 标签元素；
+	function addSpan(){
+		var inputValue=getInputValue();
+		var queue=document.getElementById('queue');
+		if (inputValue!==false) {
+				var inputValue=inputValue.split(/\s+[, ， /t]*|[, ， /t]+\s*/);
+					for (var i = 0; i < inputValue.length; i++) {
+						var span=document.createElement("span");
+						span.innerHTML=inputValue[i];
+						queue.appendChild(span);
+					}
+		}
+		removeAnyElement();
+	}
+
+
+	// 定义btnHandle来绑定点击事件；
+	function btnHandle(){
+		document.getElementById('in').onclick=function(){
+			addSpan();
+			};
+		document.getElementById('research').onclick=function(){
+			research();
+		}
+		document.getElementById('delete').onclick=function(){
+			removeAll();
+		}
+	}
+	
+	// 定义research函数；
+	 function research(){
+	 	var textInnerText=document.getElementById('textResearch').value.trim();
+		var span=document.getElementById("queue").getElementsByTagName('span');
+		var queue=document.getElementById('queue');
+		queue.innerHTML=queue.innerHTML.replace(/<\/?em.*?>/g,"");//使用regex替换em标签；
+		for (var i = 0; i < span.length; i++) {
+			if(span[i].innerText.search(textInnerText)!=-1){
+							var range=document.createRange();
+							var em=document.createElement("em");
+							range.setStart(span[i].firstChild,span[i].innerText.match(textInnerText).index);
+							range.setEnd(span[i].firstChild,span[i].innerText.match(textInnerText).index+textInnerText.length);
+							console.log(span[i].innerText.match(textInnerText).index+textInnerText.length);
+							range.surroundContents(em);
+							em.style.color="red";
+			}
+		}
+	 }
+
+	 // 定义removeAll来删除所有的元素；
+	  function removeAll(){
+		var queue=document.getElementById('queue');
+		while(queue.firstElementChild){
+			queue.removeChild(queue.firstElementChild);
+		}
+
+	  }
+
+	//定义removeAnyElement删除任意span标签
+	function removeAnyElement(){
+		var span=document.getElementById("queue").getElementsByTagName('span');
+		for (var i = 0; i < span.length; i++) {
+			span[i].onclick=function(){
+				this.parentNode.removeChild(this);
+			}
+		}
+
+	}
+
+</script>
+
+<body>
+	<!-- 首先布局 -->
+			<textarea name="input" id="input" placeholder="请输入一段文字"></textarea>
+			<div class="in">
+				<input type="button" name="btn" value="输入" id="in" />
+			</div>
+				<input type="button" name="btn" value="清除" id="delete" />
+			<div class="research">
+				<input type="text" name="text" id="textResearch"  placeholder="请输入要查询的字段" />
+				<input type="button" name="btn" value="查询" id="research" />
+			</div>
+			<p id="queue"></p>
+
+</body>
+</html>
