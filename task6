@@ -12,7 +12,9 @@
 		border-radius: 5px;
 		background: #fff;
 	}
-
+	
+	em{font-style:normal}
+	
 	.in,  .out{
 			display: inline-block;
 			margin-right: 1vw;
