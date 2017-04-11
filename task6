@@ -13,7 +13,7 @@
 		background: #fff;
 	}
 	
-	em{font-style:normal}
+	em{font-style:normal;}
 	
 	.in,  .out{
 			display: inline-block;
